@@ -27,10 +27,11 @@ namespace Warden
         public void ConnectViev(string ip)
         {
             Dictionary<string, string> connect = CheckConnect(ip);
-
+            
             Console.WriteLine("время ответа: " + connect["time"]);
             Console.WriteLine("Статус: " + connect["status"]);
             Console.WriteLine("ip адресс: " + connect["address"]);
+            Console.WriteLine("готово");
         }
     }
 }
