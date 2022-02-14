@@ -12,7 +12,7 @@ namespace Warden
         {
             ConnectCheck connect = new ConnectCheck();
 
-            connect.ConnectViev("91.109.200.200");
+            connect.ConnectViev("10.225.20.38");
         }
     }
 }

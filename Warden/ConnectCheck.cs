@@ -14,7 +14,7 @@ namespace Warden
             Ping ping = new Ping();
             PingReply PingReply = ping.Send(ip);
 
-            var connect = new Dictionary<string, string>()
+            Dictionary<string, string> connect = new Dictionary<string, string>()
             {
                 ["time"] = PingReply.RoundtripTime.ToString(),
                 ["status"] = PingReply.Status.ToString(),
