@@ -9,10 +9,9 @@ namespace Warden
 {
     class workDB
     {
-        string addres = "Data Source=Ronyx; User id=onyx; Password=onyx;";
+        OracleConnection connection = new OracleConnection("Data Source=Ronyx; User id=onyx; Password=onyx;");
         private void connectDB()
         {
-            OracleConnection connection = new OracleConnection(addres);
             connection.Open();
 
             Console.WriteLine("подключение произведено\n");
@@ -20,7 +19,6 @@ namespace Warden
 
         private void closeDB()
         {
-            OracleConnection connection = new OracleConnection(addres);
             connection.Close();
 
             Console.WriteLine("подключение завершено\n");
@@ -30,7 +28,6 @@ namespace Warden
         {
             connectDB();
 
-            OracleConnection connection = new OracleConnection(addres);
             OracleCommand command = connection.CreateCommand();
             command.CommandText = query;
 
