@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace Warden
 {
+    // Класс проверки подключения к серверу через Ping
     class ConnectCheck
     {
+        private string ip;
+
+        // конструктор
+        public ConnectCheck(string ip_add)
+        {
+            ip = ip_add;
+        }
+
+        // проверка подключения
         private Dictionary<string, string> CheckConnect(string ip)
         {
             Ping ping = new Ping();
@@ -24,7 +34,8 @@ namespace Warden
             return connect;
         }
 
-        public void ConnectViev(string ip)
+        // вывод проверки подключения в консоль
+        public void ConnectViev()
         {
             Dictionary<string, string> connect = CheckConnect(ip);
             

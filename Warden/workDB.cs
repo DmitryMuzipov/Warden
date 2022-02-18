@@ -7,9 +7,20 @@ using System.Data.OracleClient;
 
 namespace Warden
 {
+    // Класс описывает подключение к базе данных.
     class workDB
     {
-        OracleConnection connection = new OracleConnection("Data Source=Ronyx; User id=onyx; Password=onyx;");
+        OracleConnection connection = new OracleConnection();
+        private static string adress;
+
+        // конструктор
+        public workDB(string address)
+        {
+            adress = address;
+            connection.ConnectionString = address;
+        }
+
+        // подключение к базе данных
         private void connectDB()
         {
             connection.Open();
@@ -17,6 +28,7 @@ namespace Warden
             Console.WriteLine("подключение произведено\n");
         }
 
+        // отключение от базы данных
         private void closeDB()
         {
             connection.Close();
@@ -24,6 +36,7 @@ namespace Warden
             Console.WriteLine("подключение завершено\n");
         }
 
+        // исполнение запроса к базе данных
         public void SQLquery(string query)
         {
             connectDB();
