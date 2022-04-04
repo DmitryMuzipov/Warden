@@ -49,5 +49,3 @@ namespace Warden
         }
     }
 }
-//
-//"Data Source=Prototype; User id=cds; Password=cds;"

@@ -10,14 +10,15 @@ namespace Warden
     {
         static void Main(string[] args)
         {
-            SendMail send = new SendMail();
-            //ConnectCheck connect = new ConnectCheck("10.225.0.35");
-            //workDB inBD = new workDB("Data Source=Ronyx; User id=onyx; Password=onyx;");
-                     
-            //connect.ConnectViev();
-            //inBD.SQLquery("select * from ABANDONNED_FOUND LIMIT 100;");
 
-            send.Send();
+            ConnectCheck connect = new ConnectCheck("10.225.0.35");
+            connect.ConnectViev();
+
+            workDB inBD = new workDB("Data Source=Prototype; User id=cds; Password=cds;");
+            inBD.SQLquery("");
+
+            //SendMail send = new SendMail();
+            //send.Send();
         }
     }
 }

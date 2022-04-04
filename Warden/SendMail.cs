@@ -32,11 +32,11 @@ namespace Warden
             // указываем, от кого отсылается сообщение
             mailMessage.From = new MailAddress("muckredchet@gmail.com");
             // указываем, кому отправляется сообщение
-            mailMessage.To.Add(new MailAddress("Vendigo331@gmail.com"));
+            mailMessage.To.Add(new MailAddress("akihobara@yandex.ru"));
             // указываем тему сообщения
-            mailMessage.Subject = "Отчет по табличному пространству";
+            mailMessage.Subject = "Димка любит Машу)";
             // указываем текст сообщения
-            mailMessage.Body = "Текст сообщения";
+            mailMessage.Body = "Люблю тебя Солнце";
 
             // добавляем вложение
             //mailMessage.Attachments.Add(new Attachment(@"C:\\test.txt"));
