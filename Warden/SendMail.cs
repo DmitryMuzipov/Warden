@@ -30,13 +30,13 @@ namespace Warden
             // создаём объект сообщения
             MailMessage mailMessage = new MailMessage();
             // указываем, от кого отсылается сообщение
-            mailMessage.From = new MailAddress("muckredchet@gmail.com");
+            mailMessage.From = new MailAddress("MuzipovDR@tomskneft.ru");
             // указываем, кому отправляется сообщение
-            mailMessage.To.Add(new MailAddress("akihobara@yandex.ru"));
+            mailMessage.To.Add(new MailAddress("MuzipovDR@tomskneft.ru"));
             // указываем тему сообщения
-            mailMessage.Subject = "Димка любит Машу)";
+            mailMessage.Subject = "Тестовый заголовок)";
             // указываем текст сообщения
-            mailMessage.Body = "Люблю тебя Солнце";
+            mailMessage.Body = "Тестовое сообщение";
 
             // добавляем вложение
             //mailMessage.Attachments.Add(new Attachment(@"C:\\test.txt"));
@@ -49,13 +49,13 @@ namespace Warden
             // создаём объект SmtpClient
             SmtpClient smtpClient = new SmtpClient();
             // указываем адрес используемого SMTP сервера
-            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Host = "mnu-msg-prom18.tomskneft.ru";
             // указываем, что необходимо использовать SSL
             smtpClient.EnableSsl = true;
             // задаём используемый порт
             smtpClient.Port = 587;
             // доступ к SMTP серверу
-            smtpClient.Credentials = new NetworkCredential("muckredchet@gmail.com", "wvxovkcwburfgpbm");
+            smtpClient.Credentials = new NetworkCredential("MuzipovDR@tomskneft.ru", "Ntnhbfylj[2");
 
             return smtpClient;
         }
