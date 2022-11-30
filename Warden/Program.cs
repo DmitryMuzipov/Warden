@@ -11,7 +11,10 @@ namespace Warden
     {
         static void Main(string[] args)
         {
-
+            string from = "MuzipovDR@tomskneft.ru";
+            string to = "MuzipovDR@tomskneft.ru";
+            string subject = "Тестовый заголовок";
+            string body = "Тестовое сообщение";
 
 
             ConnectCheck connect = new ConnectCheck("10.225.0.35");
@@ -20,8 +23,8 @@ namespace Warden
             workDB inBD = new workDB("User id=cds; Password=cds; Server=Prototype;");
             inBD.SQLquery("select * from AA");
 
-            //SendMail send = new SendMail();
-            //send.Send();
+            SendMail send = new SendMail(from, to, subject, body);
+            send.Send();
         }
     }
 }

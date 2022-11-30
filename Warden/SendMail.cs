@@ -10,9 +10,17 @@ namespace Warden
 {
     class SendMail
     {
-        public SendMail()
-        {
+        private string from;
+        private string to;
+        private string subject;
+        private string body;
 
+        public SendMail(string from, string to, string subject, string body)
+        {
+            this.from = from;
+            this.to = to;
+            this.subject = subject;
+            this.body = body;
         }
         public void Send()
         {
@@ -30,13 +38,13 @@ namespace Warden
             // создаём объект сообщения
             MailMessage mailMessage = new MailMessage();
             // указываем, от кого отсылается сообщение
-            mailMessage.From = new MailAddress("MuzipovDR@tomskneft.ru");
+            mailMessage.From = new MailAddress(from);
             // указываем, кому отправляется сообщение
-            mailMessage.To.Add(new MailAddress("MuzipovDR@tomskneft.ru"));
+            mailMessage.To.Add(new MailAddress(to));
             // указываем тему сообщения
-            mailMessage.Subject = "Тестовый заголовок)";
+            mailMessage.Subject = subject;
             // указываем текст сообщения
-            mailMessage.Body = "Тестовое сообщение";
+            mailMessage.Body = body;
 
             // добавляем вложение
             //mailMessage.Attachments.Add(new Attachment(@"C:\\test.txt"));
@@ -55,7 +63,7 @@ namespace Warden
             // задаём используемый порт
             smtpClient.Port = 587;
             // доступ к SMTP серверу
-            smtpClient.Credentials = new NetworkCredential("MuzipovDR@tomskneft.ru", "Ntnhbfylj[2");
+            smtpClient.Credentials = new NetworkCredential(from, "Ntnhbfylj[2");
 
             return smtpClient;
         }
