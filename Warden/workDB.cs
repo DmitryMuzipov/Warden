@@ -12,13 +12,13 @@ namespace Warden
     class workDB
     {
         OracleConnection connection = new OracleConnection();
-        private static string adress;
+        private string adress;
 
         // конструктор
-        public workDB(string address)
+        public workDB(string adress)
         {
-            adress = address;
-            connection.ConnectionString = address;
+            this.adress = adress;
+            connection.ConnectionString = adress;
         }
 
         // подключение к базе данных
