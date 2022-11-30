@@ -3,43 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Data.OracleClient;
-using Devart.Data.Oracle;
+using System.Data.OracleClient;
+//using Devart.Data.Oracle;
 
 namespace Warden
 {
     // Класс описывает подключение к базе данных.
     class workDB
     {
-        //OracleConnection connection = new OracleConnection();
-        //private static string adress;
+        OracleConnection connection = new OracleConnection();
+        private static string adress;
 
         // конструктор
-        //public workDB(string address)
-        //{
-        //    adress = address;
-        //    connection.ConnectionString = address;
-        //}
+        public workDB(string address)
+        {
+            adress = address;
+            connection.ConnectionString = address;
+        }
 
         // подключение к базе данных
-        //public void connectDB()
-        //{
-        //    connection.OpenAsync();
+        public void connectDB()
+        {
+            connection.OpenAsync();
 
-        //    Console.WriteLine("подключение к базе данных: " + connection.DataSource + "\n" + connection.ServerVersion + "\n");
-        //}
+            Console.WriteLine("подключение к базе данных: " + connection.DataSource + "\n" + connection.ServerVersion + "\n");
+        }
 
         // отключение от базы данных
-        //private void closeDB()
-        //{
-        //    connection.Close();
+        private void closeDB()
+        {
+            connection.Close();
 
-        //    Console.WriteLine("подключение завершено\n");
-        //}
+            Console.WriteLine("подключение завершено\n");
+        }
 
         // исполнение запроса к базе данных
-        public void SQLquery(string query, OracleConnection connection)
+        public void SQLquery(string query)
         {
+            connectDB();
             OracleCommand command = connection.CreateCommand();
             command.CommandText = query;
 
@@ -57,24 +58,9 @@ namespace Warden
                 }
             }
 
-            //command.CommandText = query;
-
-            //using (OracleCommand cmd = connection.CreateCommand())
-            //{
-            //cmd.CommandText = query;
-
-
-            //using (OracleDataReader reader = cmd.ExecuteReader())
-            //{
-            //    while (reader.Read())
-            //    {
-            //        Console.WriteLine(reader.GetString(0) + " " + reader.GetString(1));
-            //    }
-            //}
-            //}
-
             Console.WriteLine("Запрос к базе данных выполнен\n");
-            //closeDB();
+            closeDB();
+            Console.ReadLine();
         }
     }
 }
