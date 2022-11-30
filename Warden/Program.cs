@@ -22,16 +22,15 @@ namespace Warden
             string subject = "Тестовый заголовок";
             string body = "Тестовое сообщение";
 
-
+            // Создание обьектов
             ConnectCheck connect = new ConnectCheck(ip);
-            connect.ConnectViev();
-
             workDB inBD = new workDB(connectionString);
-            inBD.SQLquery(query);
-
             SendMail send = new SendMail(from, to, subject, body);
+
+            // Обращение к функциям
+            connect.ConnectViev();
+            inBD.SQLquery(query);
             send.Send();
         }
     }
 }
-//"10.225.20.38"
