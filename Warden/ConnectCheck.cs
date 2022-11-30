@@ -13,9 +13,9 @@ namespace Warden
         private string ip;
 
         // конструктор
-        public ConnectCheck(string ip_add)
+        public ConnectCheck(string ip)
         {
-            ip = ip_add;
+            this.ip = ip;
         }
 
         // проверка подключения
