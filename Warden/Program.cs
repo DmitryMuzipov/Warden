@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using Devart.Data.Oracle;
+using System.Xml;
+using Devart.Data.Oracle;
 
 namespace Warden
 {
@@ -14,8 +16,10 @@ namespace Warden
             // Сервер
             string ip = "10.225.0.35";
             string connectionString = "User id=cds; Password=cds; Server=Prototype;";
+            string filename = "Выгрузка";
+
             // Запрос
-            string query = "select * from AA";
+            string query = "SELECT tablespace_name, bytes FROM dba_data_files ORDER BY tablespace_name";
             // Письмо
             string from = "MuzipovDR@tomskneft.ru";
             string to = "MuzipovDR@tomskneft.ru";
@@ -25,12 +29,13 @@ namespace Warden
             // Создание обьектов
             ConnectCheck connect = new ConnectCheck(ip);
             workDB inBD = new workDB(connectionString);
-            SendMail send = new SendMail(from, to, subject, body);
+            //SendMail send = new SendMail(from, to, subject, body);
 
-            // Обращение к функциям
+            // Обращение к методам
             connect.ConnectViev();
-            inBD.SQLquery(query);
-            send.Send();
+            //inBD.SQLquery(query);
+            inBD.SQLToXml(query, filename);
+            //send.Send();
         }
     }
 }
