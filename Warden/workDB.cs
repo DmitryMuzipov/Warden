@@ -115,10 +115,6 @@ namespace Warden
                             inGB = (ulong)Math.Floor(inGB);
                             xmlWriter.WriteElementString("Value", inGB.ToString());
                         }
-
-                        
-                        //xmlWriter.WriteElementString("Name", str);
-                        
                     }
                     Console.WriteLine(str + " " + inGB);
                     //Console.WriteLine(str);
