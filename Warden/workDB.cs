@@ -71,8 +71,10 @@ namespace Warden
         // запись таблици в XML
         public void SQLToXml(string query, string fileName)
         {
-            connectDB();
             OracleCommand command = connection.CreateCommand();
+            
+
+            connectDB();
             command.CommandText = query;
 
             using (OracleDataReader reader = command.ExecuteReader())
@@ -80,6 +82,8 @@ namespace Warden
                 var KonstGB = 1048575.5f;
                 var inGB = 0f;
                 var str = "";
+                var count = 0f;
+                string stop_tablespace = "";
 
                 // Создаем объект для записи XML-документа
                 XmlTextWriter xmlWriter = new XmlTextWriter(fileName, null);
@@ -100,23 +104,43 @@ namespace Warden
 
                 while (reader.Read())
                 {
-                    xmlWriter.WriteStartElement("row");
+                    //xmlWriter.WriteStartElement("row");
+                    xmlWriter.WriteStartElement(str);
 
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         if (reader.GetValue(i) is string)
                         {
                             str = reader.GetValue(i).ToString();
-                            xmlWriter.WriteElementString("Name", str.ToString());
+                            //xmlWriter.WriteStartElement(str);
+                            if (str != stop_tablespace)
+                            {
+                                count = 0;
+                            }
+                            stop_tablespace = str;
                         }
                         else
                         {
                             inGB = Convert.ToUInt64(reader.GetValue(i)) / KonstGB;
                             inGB = (ulong)Math.Floor(inGB);
-                            xmlWriter.WriteElementString("Value", inGB.ToString());
+                            /*
+                            if (count <= inGB)
+                            {
+                                xmlWriter.WriteElementString("maxValue", inGB.ToString());
+                            }
+                            else
+                            {
+                                xmlWriter.WriteElementString("Value", inGB.ToString());
+                            }
+                            */
+                            xmlWriter.WriteElementString("Value", count.ToString());
+                            count += inGB;
                         }
+                        
+                        
                     }
-                    Console.WriteLine(str + " " + inGB);
+                    
+                    Console.WriteLine(str + " " + inGB + " " + count);
                     //Console.WriteLine(str);
                     xmlWriter.WriteEndElement();
                 }
@@ -128,7 +152,7 @@ namespace Warden
                 xmlWriter.Flush();
                 xmlWriter.Close();
 
-                Console.WriteLine("Выгрузка завершена");
+                //Console.WriteLine("Выгрузка завершена");
             }
 
             Console.WriteLine("Запрос к базе данных выполнен. Результат сохранен в файл " + fileName);
