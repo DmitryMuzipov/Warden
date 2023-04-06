@@ -35,6 +35,34 @@ namespace Warden
             Console.ReadLine();
         }
 
+        public void Handler_repet()
+        {
+            // Загружаем xml файл в XmlDocument
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load("выгрузка.xml");
+
+            // Получаем корневой элемент документа и коллекцию всех дочерних элементов
+            XmlNode root = xmlDoc.DocumentElement;
+            XmlNodeList nodeList = root.SelectNodes("data/*");
+
+            // Проходимся по всем дочерним элементам
+            for (int i = nodeList.Count - 2; i >= 0; i--)
+            {
+                // Получаем текущий и следующий элементы
+                XmlNode currentNode = nodeList.Item(i);
+                XmlNode nextNode = nodeList.Item(i + 1);
+
+                // Если названия элементов совпадают, то удаляем текущий элемент
+                if (currentNode.Name == nextNode.Name)
+                {
+                    root.SelectSingleNode("data").RemoveChild(currentNode);
+                }
+            }
+
+            // Сохраняем изменения в файл
+            xmlDoc.Save("выгрузка-new.xml");
+        }
+
         // Важно Header_writer и Vault_writer работают в паре если открывается элемент в шапке то должен быть закрыт в подвале
         private void Header_writer(string fileName, XmlTextWriter xmlWriter)
         {

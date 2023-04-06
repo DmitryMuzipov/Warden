@@ -34,9 +34,10 @@ namespace Warden
 
             // Обращение к методам
             connect.ConnectViev();
-            inBD.SQLquery(query);
+            //inBD.SQLquery(query);
             inBD.SQLToXml(query, filename);
             //inXml.Body_writer("Конь.xml");
+            inXml.Handler_repet();
             //inXml.Reader();
             //send.Send();
         }

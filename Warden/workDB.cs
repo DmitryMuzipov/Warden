@@ -175,7 +175,7 @@ namespace Warden
 
             Console.WriteLine("Запрос к базе данных выполнен. Результат сохранен в файл " + fileName);
             closeDB();
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }
