@@ -82,8 +82,11 @@ namespace Warden
                 var KonstGB = 1048575.5f;
                 var inGB = 0f;
                 var str = "";
-                var count = 0f;
-                string stop_tablespace = "";
+                var sum_max_bytes = 0f;
+                var sum_bytes = 0f;
+                var count_row = 0;
+                var count_cell = 0;
+                string stop_tablespace = "AUTH";
 
                 // Создаем объект для записи XML-документа
                 XmlTextWriter xmlWriter = new XmlTextWriter(fileName, null);
@@ -105,17 +108,19 @@ namespace Warden
                 while (reader.Read())
                 {
                     //xmlWriter.WriteStartElement("row");
-                    xmlWriter.WriteStartElement(str);
+                    //xmlWriter.WriteStartElement(str);
 
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         if (reader.GetValue(i) is string)
                         {
                             str = reader.GetValue(i).ToString();
-                            //xmlWriter.WriteStartElement(str);
+                            xmlWriter.WriteStartElement(str);
                             if (str != stop_tablespace)
                             {
-                                count = 0;
+                                sum_max_bytes = 0;
+                                sum_bytes = 0;
+
                             }
                             stop_tablespace = str;
                         }
@@ -123,6 +128,20 @@ namespace Warden
                         {
                             inGB = Convert.ToUInt64(reader.GetValue(i)) / KonstGB;
                             inGB = (ulong)Math.Floor(inGB);
+                            if (count_cell == 0)
+                            {
+                                sum_bytes += inGB;
+                                xmlWriter.WriteElementString("Value", sum_bytes.ToString());
+                                
+                                count_cell++;
+                            }
+                            else
+                            {
+                                sum_max_bytes += inGB;
+                                xmlWriter.WriteElementString("MaxValue", sum_max_bytes.ToString());
+                                
+                                count_cell = 0;
+                            }
                             /*
                             if (count <= inGB)
                             {
@@ -133,14 +152,13 @@ namespace Warden
                                 xmlWriter.WriteElementString("Value", inGB.ToString());
                             }
                             */
-                            xmlWriter.WriteElementString("Value", count.ToString());
-                            count += inGB;
+                            //xmlWriter.WriteElementString("Value", sum_max_bytes.ToString());
                         }
                         
                         
                     }
                     
-                    Console.WriteLine(str + " " + inGB + " " + count);
+                    Console.WriteLine(str + " " + inGB + " " + sum_max_bytes);
                     //Console.WriteLine(str);
                     xmlWriter.WriteEndElement();
                 }

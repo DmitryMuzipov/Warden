@@ -19,7 +19,7 @@ namespace Warden
             string filename = "Выгрузка.xml";
 
             // Запрос
-            string query = "SELECT tablespace_name, maxbytes FROM dba_data_files ORDER BY tablespace_name";
+            string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
             // Письмо
             string from = "MuzipovDR@tomskneft.ru";
             string to = "MuzipovDR@tomskneft.ru";
@@ -34,7 +34,7 @@ namespace Warden
 
             // Обращение к методам
             connect.ConnectViev();
-            //inBD.SQLquery(query);
+            inBD.SQLquery(query);
             inBD.SQLToXml(query, filename);
             //inXml.Body_writer("Конь.xml");
             //inXml.Reader();
