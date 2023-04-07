@@ -38,6 +38,7 @@ namespace Warden
             inBD.SQLToXml(query, filename);
             //inXml.Body_writer("Конь.xml");
             inXml.Handler_repet();
+            inXml.Handler_percent();
             //inXml.Reader();
             //send.Send();
         }

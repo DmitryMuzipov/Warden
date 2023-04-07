@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
+
 namespace Warden
 {
     class WorkXML
@@ -61,6 +62,53 @@ namespace Warden
 
             // Сохраняем изменения в файл
             xmlDoc.Save("выгрузка-new.xml");
+        }
+
+        public void Handler_percent()
+        {
+            // Создаем XML документ
+            XmlDocument doc = new XmlDocument();
+            doc.Load("выгрузка-new.xml"); // Путь к исходному файлу
+            XmlElement root = doc.DocumentElement;
+
+            // Создаем новый XML документ с корневым элементом tablespaces
+            XmlDocument newDoc = new XmlDocument();
+            var newRoot = newDoc.CreateElement("tablespaces");
+            newDoc.AppendChild(newRoot);
+
+            // Получаем список элементов данных таблиц
+            XmlNodeList tables = root.SelectNodes("data/*");
+
+            // Проходимся по каждому элементу
+            foreach (XmlNode table in tables)
+            {
+                int value = int.Parse(table.SelectSingleNode("Value").InnerText);
+                int maxValue = int.Parse(table.SelectSingleNode("MaxValue").InnerText);
+
+                // Вычисляем процент заполненности таблицы
+                double percent = (double)value / maxValue;
+
+                // Если процент заполненности больше 0.7, добавляем элемент в новый файл
+                if (percent > 0.7)
+                {
+                    // Сокращаем проценты
+                    percent = percent * 100;
+
+                    // Создаем новый элемент для таблицы
+                    XmlElement newTable = newDoc.CreateElement(table.Name);
+
+                    // Добавляем элементы Value, MaxValue и Percent
+                    newTable.AppendChild(newDoc.CreateElement("Value")).InnerText = value.ToString();
+                    newTable.AppendChild(newDoc.CreateElement("MaxValue")).InnerText = maxValue.ToString();
+                    newTable.AppendChild(newDoc.CreateElement("Percent")).InnerText = percent.ToString("0") + "%";
+
+                    // Добавляем новый элемент таблицы в корневой элемент нового файла
+                    newRoot.AppendChild(newTable);
+                }
+            }
+
+            // Сохраняем новый XML файл
+            newDoc.Save("готовый.xml");
         }
 
         // Важно Header_writer и Vault_writer работают в паре если открывается элемент в шапке то должен быть закрыт в подвале
