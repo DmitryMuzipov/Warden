@@ -24,23 +24,30 @@ namespace Warden
             string from = "MuzipovDR@tomskneft.ru";
             string to = "MuzipovDR@tomskneft.ru";
             string subject = "Тестовый заголовок";
-            string body = "Тестовое сообщение";
 
             // Создание обьектов
             ConnectCheck connect = new ConnectCheck(ip);
             workDB inBD = new workDB(connectionString);
-            WorkXML inXml = new WorkXML();
-            //SendMail send = new SendMail(from, to, subject, body);
+            WorkXML inXml = new WorkXML(filename);
+
+            string body = inXml.XmlToHtml();
+
+            SendMail send = new SendMail(from, to, subject, body);
+
+            
 
             // Обращение к методам
             connect.ConnectViev();
             //inBD.SQLquery(query);
             inBD.SQLToXml(query, filename);
             //inXml.Body_writer("Конь.xml");
-            inXml.Handler_repet();
+            //inXml.Handler_repet(filename);
             inXml.Handler_percent();
+            inXml.XmlToHtml();
             //inXml.Reader();
-            //send.Send();
+            send.Send();
+
+            //Console.Read();
         }
     }
 }//bytes, maxbytes

@@ -107,9 +107,6 @@ namespace Warden
 
                 while (reader.Read())
                 {
-                    //xmlWriter.WriteStartElement("row");
-                    //xmlWriter.WriteStartElement(str);
-
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         if (reader.GetValue(i) is string)
@@ -142,20 +139,7 @@ namespace Warden
                                 
                                 count_cell = 0;
                             }
-                            /*
-                            if (count <= inGB)
-                            {
-                                xmlWriter.WriteElementString("maxValue", inGB.ToString());
-                            }
-                            else
-                            {
-                                xmlWriter.WriteElementString("Value", inGB.ToString());
-                            }
-                            */
-                            //xmlWriter.WriteElementString("Value", sum_max_bytes.ToString());
                         }
-                        
-                        
                     }
                     
                     Console.WriteLine(str + " " + inGB + " " + sum_max_bytes);

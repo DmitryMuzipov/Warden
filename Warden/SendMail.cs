@@ -43,6 +43,8 @@ namespace Warden
             mailMessage.To.Add(new MailAddress(to));
             // указываем тему сообщения
             mailMessage.Subject = subject;
+            // Указываем что в теле письма прийдет HTML
+            mailMessage.IsBodyHtml = true;
             // указываем текст сообщения
             mailMessage.Body = body;
 
@@ -63,7 +65,7 @@ namespace Warden
             // задаём используемый порт
             smtpClient.Port = 587;
             // доступ к SMTP серверу
-            smtpClient.Credentials = new NetworkCredential(from, "Ntnhbfylj[2");
+            smtpClient.Credentials = new NetworkCredential(from, "Ntnhbfylj[4");
 
             return smtpClient;
         }

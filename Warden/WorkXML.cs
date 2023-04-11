@@ -10,37 +10,18 @@ namespace Warden
 {
     class WorkXML
     {
-        public WorkXML()
+        string fileName;
+
+        public WorkXML(string fileName)
         {
-            
+            this.fileName = fileName;
         }
 
-        public void Reader()
-        {
-            XmlReader xmlFile = XmlReader.Create("Выгрузка.xml");
-            while (xmlFile.Read())
-            {
-                if (xmlFile.NodeType == XmlNodeType.Element)
-                {
-                    if (xmlFile.Name == "Name")
-                    {
-                        Console.WriteLine("Name: " + xmlFile.ReadInnerXml());
-                    }
-                    else if (xmlFile.Name == "Value")
-                    {
-                        Console.WriteLine("Value: " + xmlFile.ReadInnerXml());
-                    }
-                }
-            }
-
-            Console.ReadLine();
-        }
-
-        public void Handler_repet()
+        private void Handler_repet()
         {
             // Загружаем xml файл в XmlDocument
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load("выгрузка.xml");
+            xmlDoc.Load(fileName);
 
             // Получаем корневой элемент документа и коллекцию всех дочерних элементов
             XmlNode root = xmlDoc.DocumentElement;
@@ -66,6 +47,9 @@ namespace Warden
 
         public void Handler_percent()
         {
+            // Избавляемся от дубликатов записей
+            Handler_repet();
+
             // Создаем XML документ
             XmlDocument doc = new XmlDocument();
             doc.Load("выгрузка-new.xml"); // Путь к исходному файлу
@@ -87,6 +71,7 @@ namespace Warden
 
                 // Вычисляем процент заполненности таблицы
                 double percent = (double)value / maxValue;
+                double remainder = maxValue - value;
 
                 // Если процент заполненности больше 0.7, добавляем элемент в новый файл
                 if (percent > 0.7)
@@ -98,8 +83,9 @@ namespace Warden
                     XmlElement newTable = newDoc.CreateElement(table.Name);
 
                     // Добавляем элементы Value, MaxValue и Percent
-                    newTable.AppendChild(newDoc.CreateElement("Value")).InnerText = value.ToString();
-                    newTable.AppendChild(newDoc.CreateElement("MaxValue")).InnerText = maxValue.ToString();
+                    newTable.AppendChild(newDoc.CreateElement("Value")).InnerText = value.ToString() + " GB";
+                    newTable.AppendChild(newDoc.CreateElement("MaxValue")).InnerText = maxValue.ToString() + " GB";
+                    newTable.AppendChild(newDoc.CreateElement("Remainder")).InnerText = remainder.ToString("0") + " MB";
                     newTable.AppendChild(newDoc.CreateElement("Percent")).InnerText = percent.ToString("0") + "%";
 
                     // Добавляем новый элемент таблицы в корневой элемент нового файла
@@ -108,64 +94,42 @@ namespace Warden
             }
 
             // Сохраняем новый XML файл
-            newDoc.Save("готовый.xml");
+            newDoc.Save("выгрузка.xml");
         }
 
-        // Важно Header_writer и Vault_writer работают в паре если открывается элемент в шапке то должен быть закрыт в подвале
-        private void Header_writer(string fileName, XmlTextWriter xmlWriter)
+        public string XmlToHtml()
         {
-            // Параметр отвечающий за лесечный формат элементов в файле
-            xmlWriter.Formatting = Formatting.Indented;
+            // Создаем обьект XML и загружаем в него файл
+            XmlDocument doc = new XmlDocument();
+            doc.Load("выгрузка.xml");
 
-            // Записываем заголовок XML-документа
-            xmlWriter.WriteStartDocument();
+            // Пишем строку с шапкой и заголовки колонок
+            string html = "<table>";
+            html += "<tr><th>Табличное пространство</th><th>Масимальное значения</th><th>Текущее заначение</th><th>Остаток места</th><th>Проценты</th></tr>";
 
-            xmlWriter.WriteStartElement("table");
-            // Пишем шапку таблицы
-            xmlWriter.WriteStartElement("header");
-            xmlWriter.WriteElementString("Место", "Тут");
-            xmlWriter.WriteEndElement();
+            // Заполняем html таблицу банными их xml файла
+            XmlNodeList tablespaceNodes = doc.GetElementsByTagName("tablespaces")[0].ChildNodes;
+            foreach (XmlNode node in tablespaceNodes)
+            {
+                string tablespace = node.Name;
+                string value = node["Value"].InnerText;
+                string maxValue = node["MaxValue"].InnerText;
+                string remainder = node["Remainder"].InnerText;
+                string percent = node["Percent"].InnerText;
 
+                html += "<tr>";
+                html += "<td>" + tablespace + "</td>";
+                html += "<td>" + maxValue + "</td>";
+                html += "<td>" + value + "</td>";
+                html += "<td>" + remainder + "</td>";
+                html += "<td>" + percent + "</td>";
+                html += "</tr>";
+            }
 
+            html += "</table>";
 
-
-            //Console.WriteLine("Выгрузка завершена");
-        }
-
-        private void Vault_writer(string fileName, XmlTextWriter xmlWriter)
-        {
-            //XmlTextWriter xmlWriter = new XmlTextWriter(fileName, null);
-
-            // Закрываем объект для записи XML-документа
-            
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
-            xmlWriter.Close();
-
-            Console.WriteLine("Запись произведена");
-            //Console.ReadLine();
-        }
-
-        public void Body_writer(string fileName)
-        {
-            XmlTextWriter xmlWriter = new XmlTextWriter(fileName, null);
-
-            // Шапка Файла
-            Header_writer(fileName, xmlWriter);
-
-            // Пишем тело таблицы
-            xmlWriter.WriteStartElement("Ферма");
-
-            xmlWriter.WriteStartElement("Стойло");
-            xmlWriter.WriteElementString("Место", "Тут конь валялся!");
-            xmlWriter.WriteEndElement();
-
-
-
-
-            // Подвал файлаxmlWriter.WriteEndElement();
-            Vault_writer(fileName, xmlWriter);
+            //Console.WriteLine(html);
+            return html;
         }
     }
 }
