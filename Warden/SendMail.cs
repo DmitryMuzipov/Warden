@@ -11,30 +11,33 @@ namespace Warden
     class SendMail
     {
         private string from;
-        private string to;
+        //private string to;
         private string subject;
         private string body;
 
-        public SendMail(string from, string to, string subject, string body)
+        public SendMail(string from, string subject, string body)
         {
             this.from = from;
-            this.to = to;
+            //this.to = to;
             this.subject = subject;
             this.body = body;
         }
-        public void Send()
+        public void Send(string to)
         {
             // получаем SmtpClient
             SmtpClient smtpClient = GetSmtpClient();
             // получаем сообщение
-            MailMessage mailMessage = GetMailMessage();
+            MailMessage mailMessage = GetMailMessage(to);
 
             // отправляем сообщение
             smtpClient.Send(mailMessage);
         }
 
-        private MailMessage GetMailMessage()
+        private MailMessage GetMailMessage(string to)
         {
+            //WorkXML inXml = new WorkXML("Выгрузка.xml");
+            //string body = inXml.XmlToHtml();
+
             // создаём объект сообщения
             MailMessage mailMessage = new MailMessage();
             // указываем, от кого отсылается сообщение

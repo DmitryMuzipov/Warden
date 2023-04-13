@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Devart.Data.Oracle;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Warden
 {
@@ -20,32 +22,30 @@ namespace Warden
 
             // Запрос
             string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
-            // Письмо
-            string from = "MuzipovDR@tomskneft.ru";
-            string to = "MuzipovDR@tomskneft.ru";
-            string subject = "Тестовый заголовок";
 
             // Создание обьектов
             ConnectCheck connect = new ConnectCheck(ip);
             workDB inBD = new workDB(connectionString);
             WorkXML inXml = new WorkXML(filename);
 
-            string body = inXml.XmlToHtml();
-
-            SendMail send = new SendMail(from, to, subject, body);
-
             
 
             // Обращение к методам
             connect.ConnectViev();
-            //inBD.SQLquery(query);
-            inBD.SQLToXml(query, filename);
-            //inXml.Body_writer("Конь.xml");
-            //inXml.Handler_repet(filename);
-            inXml.Handler_percent();
-            inXml.XmlToHtml();
-            //inXml.Reader();
-            send.Send();
+
+            // Десиериализация JSON
+            string json = File.ReadAllText("person.json");
+            Massage[] Mes = JsonConvert.DeserializeObject<Massage[]>(json);
+
+            // Сборка тела письма в формат HTML
+            string body = inXml.XmlToHtml();
+            
+            // Отправка письма по списку
+            foreach (var per in Mes)
+            {
+                SendMail send = new SendMail(per.From, per.Subject, body);
+                send.Send(per.To);
+            }
 
             //Console.Read();
         }
