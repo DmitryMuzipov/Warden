@@ -27,7 +27,15 @@ namespace Warden
             // Десиериализация JSON
             string path = Path.GetFullPath("Style.css");
             string body = "<!DOCTYPE HTML>";
-            body += "<html><head><meta charset =\"utf-8\"><link rel=\"stylesheet\" href=" + path.Replace(@"\" , @"/") + "></head ><body>";
+            body += "<html><head><meta charset =\"utf-8\"><style>" +
+                        "table{border: 4px solid black;}" +
+                        "td{border: 1px solid black;" +
+                           "padding: 5px; margin: 5px;}" +
+                        "th{margin-left: 15px;}" +
+                        "td.reed{background: #e05858;}" +
+                        "tr {border: 2px solid black;}" +
+                        "p{font-size: 15px;}" +
+                    "</style></head ><body>"; 
             string message = File.ReadAllText("person.json");
             string config = File.ReadAllText("config.json");
             Massage[] Mes = JsonConvert.DeserializeObject<Massage[]>(message);
@@ -54,7 +62,7 @@ namespace Warden
                 send.Send(per.To);
             }
 
-            Console.Read();
+            //Console.Read();
         }
     }
 }//bytes, maxbytes
