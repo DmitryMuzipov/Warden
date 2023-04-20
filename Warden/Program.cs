@@ -15,45 +15,38 @@ namespace Warden
     {
         static void Main(string[] args)
         {
-            // Сервер
-            //string ip = "10.225.0.35";
-            //string connectionString = "User id=cds; Password=cds; Server=Prototype;";
             string filename = "Выгрузка.xml";
 
             // Запрос
             string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
 
             // Создание обьектов
-            //ConnectCheck connect = new ConnectCheck(ip);
-            //workDB inBD = new workDB(connectionString);
             WorkXML inXml = new WorkXML(filename);
- 
 
-            // Обращение к методам
-            
 
             // Десиериализация JSON
+            string path = Path.GetFullPath("Style.css");
+            string body = "<!DOCTYPE HTML>";
+            body += "<html><head><meta charset =\"utf-8\"><link rel=\"stylesheet\" href=" + path.Replace(@"\" , @"/") + "></head ><body>";
             string message = File.ReadAllText("person.json");
             string config = File.ReadAllText("config.json");
             Massage[] Mes = JsonConvert.DeserializeObject<Massage[]>(message);
             Config[] Conf = JsonConvert.DeserializeObject<Config[]>(config);
 
-            var stXML = inXml.StartXML();
 
             foreach (var con in Conf)
             {
-                ConnectCheck connect = new ConnectCheck(con.Ip);
-                connect.ConnectViev();
+                //ConnectCheck connect = new ConnectCheck(con.Ip);
+                //connect.ConnectViev();
                 workDB inBD = new workDB(con.ConnectionString);
-                inBD.SQLToXml(query, filename, stXML);
+                inBD.SQLToXml(query, filename);
                 inXml.Handler_percent();
+                body += "<p>" + con.Server + "</p>";
+                body += inXml.XmlToHtml();
             }
+            body += "</body></html>";
 
-            inXml.CloseXML(stXML);
-
-            // Сборка тела письма в формат HTML
-            string body = inXml.XmlToHtml();
-            
+            Console.WriteLine(path);
             // Отправка письма по списку
             foreach (var per in Mes)
             {
@@ -61,7 +54,7 @@ namespace Warden
                 send.Send(per.To);
             }
 
-            //Console.Read();
+            Console.Read();
         }
     }
 }//bytes, maxbytes

@@ -102,6 +102,7 @@ namespace Warden
             // Создаем обьект XML и загружаем в него файл
             XmlDocument doc = new XmlDocument();
             doc.Load("выгрузка.xml");
+            string cl = "reed";
 
             // Пишем строку с шапкой и заголовки колонок
             string html = "<table>";
@@ -122,7 +123,7 @@ namespace Warden
                 html += "<td>" + maxValue + "</td>";
                 html += "<td>" + value + "</td>";
                 html += "<td>" + remainder + "</td>";
-                html += "<td>" + percent + "</td>";
+                html += "<td class=" + cl + ">" + percent + "</td>";
                 html += "</tr>";
             }
 
