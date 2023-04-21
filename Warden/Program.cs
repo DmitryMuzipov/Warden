@@ -17,12 +17,8 @@ namespace Warden
         {
             string filename = "Выгрузка.xml";
 
-            // Запрос
-            string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
-
             // Создание обьектов
             WorkXML inXml = new WorkXML(filename);
-
 
             // Десиериализация JSON
             string body = inXml.HeadHTML();
@@ -35,7 +31,7 @@ namespace Warden
             foreach (var con in Conf)
             {
                 workDB inBD = new workDB(con.ConnectionString);
-                inBD.SQLToXml(query, filename);
+                inBD.SQLToXml(filename);
                 inXml.Handler_percent();
                 body += "<p>" + con.Server + "</p>";
                 body += inXml.XmlToHtml();
@@ -53,4 +49,4 @@ namespace Warden
             //Console.Read();
         }
     }
-}//bytes, maxbytes
+}

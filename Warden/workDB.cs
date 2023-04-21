@@ -15,6 +15,7 @@ namespace Warden
     {
         OracleConnection connection = new OracleConnection();
         private string adress;
+        private string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
 
         // конструктор
         public workDB(string adress)
@@ -69,7 +70,7 @@ namespace Warden
         }
 
         // запись таблици в XML
-        public void SQLToXml(string query, string fileName)
+        public void SQLToXml(string fileName)
         {
             OracleCommand command = connection.CreateCommand();
             
@@ -84,7 +85,6 @@ namespace Warden
                 var str = "";
                 var sum_max_bytes = 0f;
                 var sum_bytes = 0f;
-                var count_row = 0;
                 var count_cell = 0;
                 string stop_tablespace = "AUTH";
 

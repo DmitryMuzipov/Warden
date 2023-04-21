@@ -11,14 +11,12 @@ namespace Warden
     class SendMail
     {
         private string from;
-        //private string to;
         private string subject;
         private string body;
 
         public SendMail(string from, string subject, string body)
         {
             this.from = from;
-            //this.to = to;
             this.subject = subject;
             this.body = body;
         }

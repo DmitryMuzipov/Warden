@@ -98,6 +98,7 @@ namespace Warden
             newDoc.Save("выгрузка.xml");
         }
 
+        // Формирование HTML Шапки и стилей
         public string HeadHTML()
         {
             string html = "<!DOCTYPE HTML>"+
