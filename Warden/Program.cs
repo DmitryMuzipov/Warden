@@ -25,36 +25,24 @@ namespace Warden
 
 
             // Десиериализация JSON
-            string path = Path.GetFullPath("Style.css");
-            string body = "<!DOCTYPE HTML>";
-            body += "<html><head><meta charset =\"utf-8\"><style>" +
-                        "table{border: 4px solid black;}" +
-                        "td{border: 1px solid black;" +
-                           "padding: 5px; margin: 5px;}" +
-                        "th{margin-left: 15px;}" +
-                        "td.reed{background: #e05858;}" +
-                        "tr {border: 2px solid black;}" +
-                        "p{font-size: 15px;}" +
-                    "</style></head ><body>"; 
+            string body = inXml.HeadHTML();
             string message = File.ReadAllText("person.json");
             string config = File.ReadAllText("config.json");
             Massage[] Mes = JsonConvert.DeserializeObject<Massage[]>(message);
             Config[] Conf = JsonConvert.DeserializeObject<Config[]>(config);
 
-
+            // Формирование письма
             foreach (var con in Conf)
             {
-                //ConnectCheck connect = new ConnectCheck(con.Ip);
-                //connect.ConnectViev();
                 workDB inBD = new workDB(con.ConnectionString);
                 inBD.SQLToXml(query, filename);
                 inXml.Handler_percent();
                 body += "<p>" + con.Server + "</p>";
                 body += inXml.XmlToHtml();
             }
-            body += "</body></html>";
+            body += inXml.VaultHTML();
 
-            Console.WriteLine(path);
+
             // Отправка письма по списку
             foreach (var per in Mes)
             {

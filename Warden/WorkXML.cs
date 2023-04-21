@@ -11,6 +11,7 @@ namespace Warden
     class WorkXML
     {
         string fileName;
+        
 
         public WorkXML(string fileName)
         {
@@ -97,6 +98,28 @@ namespace Warden
             newDoc.Save("выгрузка.xml");
         }
 
+        public string HeadHTML()
+        {
+            string html = "<!DOCTYPE HTML>"+
+                              "<html><head><meta charset =\"utf-8\"><style>" +
+                                "table{border: 4px solid black;}" +
+                                "td{border: 1px solid black;" +
+                                   "padding: 5px; margin: 5px;}" +
+                                "th{margin-left: 15px;}" +
+                                "td.reed{background: #e05858;}" +
+                                "tr {border: 2px solid black;}" +
+                                "p{font-size: 15px;}" +
+                              "</style></head ><body>";
+
+            return html;
+        }
+
+        public string VaultHTML()
+        {
+            string html = "</ body ></ html >";
+
+            return html;
+        }
         public string XmlToHtml()
         {
             // Создаем обьект XML и загружаем в него файл
