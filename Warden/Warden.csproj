@@ -81,7 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendMail.cs" />
     <Compile Include="workDB.cs" />
-    <Compile Include="WorkXML.cs" />
+    <Compile Include="FormationHTML.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

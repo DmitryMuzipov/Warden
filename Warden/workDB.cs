@@ -125,29 +125,27 @@ namespace Warden
                             inGB = (ulong)Math.Floor(inGB);
                             if (count_cell == 0)
                             {
-                                xmlWriter.WriteElementString("Value", inGB.ToString());
+                                xmlWriter.WriteElementString("Value", inGB.ToString() + " GB");
                                 count_cell++;
                             }
                             else if (count_cell == 1)
                             {
-                                xmlWriter.WriteElementString("MaxValue", inGB.ToString());
+                                xmlWriter.WriteElementString("MaxValue", inGB.ToString() + " GB");
                                 count_cell++;
                             }
                             else if (count_cell == 2)
                             {
-                                xmlWriter.WriteElementString("Remainder", inGB.ToString());
+                                xmlWriter.WriteElementString("Remainder", inGB.ToString() + " MB");
                                 count_cell++;
                             }
                             else
                             {
-                                xmlWriter.WriteElementString("Percent", reader.GetValue(i).ToString());
+                                xmlWriter.WriteElementString("Percent", reader.GetValue(i).ToString() + "%");
                                 count_cell = 0;
                             }
                         }
                     }
-                    
-                    Console.WriteLine(str + " " + inGB + " " + sum_max_bytes);
-                    //Console.WriteLine(str);
+
                     xmlWriter.WriteEndElement();
                 }
 

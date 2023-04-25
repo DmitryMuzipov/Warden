@@ -18,7 +18,7 @@ namespace Warden
             string filename = "Выгрузка.xml";
 
             // Создание обьектов
-            WorkXML inXml = new WorkXML(filename);
+            FormationHTML inHTML = new FormationHTML(filename);
 
             // Десиериализация JSON
             string message = File.ReadAllText("person.json");
@@ -27,17 +27,17 @@ namespace Warden
             Config[] Conf = JsonConvert.DeserializeObject<Config[]>(config);
 
             // Формирование письма
-            string body = inXml.HeadHTML();
+            string body = inHTML.HeadHTML();
             foreach (var con in Conf)
             {
-                //ConnectCheck сcon = new ConnectCheck("10.225.184.24");
-                //сcon.ConnectViev();
+                ConnectCheck сcon = new ConnectCheck("10.225.184.24");
+                сcon.ConnectViev();
                 workDB inBD = new workDB(con.ConnectionString);
                 inBD.SQLToXml(filename);
                 body += "<p>" + con.Server + "</p>";
-                body += inXml.XmlToHtml();
+                body += inHTML.XmlToHtml();
             }
-            body += inXml.VaultHTML();
+            body += inHTML.VaultHTML();
 
 
             // Отправка письма по списку
@@ -47,7 +47,7 @@ namespace Warden
                 send.Send(per.To);
             }
 
-            //Console.Read();
+            Console.Read();
         }
     }
 }

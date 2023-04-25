@@ -8,12 +8,12 @@ using System.Xml;
 
 namespace Warden
 {
-    class WorkXML
+    class FormationHTML
     {
         string fileName;
         
 
-        public WorkXML(string fileName)
+        public FormationHTML(string fileName)
         {
             this.fileName = fileName;
         }
