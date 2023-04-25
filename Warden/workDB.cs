@@ -15,7 +15,21 @@ namespace Warden
     {
         OracleConnection connection = new OracleConnection();
         private string adress;
-        private string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
+        //private string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
+        private string query = "SELECT +" +
+                                    "tablespace_name as tablespaces, " +
+                                    "SUM(bytes) as bytes, " +
+                                    "SUM(maxbytes) as maxbytes, " +
+                                    "SUM(maxbytes - bytes) as remainder, " +
+                                    "ROUND((SUM(bytes) / SUM(maxbytes)) * 100, 2) AS Percent " +
+                                "FROM dba_data_files WHERE tablespace_name IN " +
+                                    "(SELECT tablespace_name " +
+                                        "FROM dba_data_files " +
+                                        "GROUP BY tablespace_name " +
+                                    "HAVING(SUM(bytes) / SUM(maxbytes)) * 100 > 70) " +
+                                "GROUP BY tablespace_name " +
+                                "ORDER BY tablespace_name ";
+
 
         // конструктор
         public workDB(string adress)
@@ -84,9 +98,7 @@ namespace Warden
                 var inGB = 0f;
                 var str = "";
                 var sum_max_bytes = 0f;
-                var sum_bytes = 0f;
                 var count_cell = 0;
-                string stop_tablespace = "AUTH";
 
                 // Создаем объект для записи XML-документа
                 XmlTextWriter xmlWriter = new XmlTextWriter(fileName, null);
@@ -95,15 +107,8 @@ namespace Warden
                 // Записываем заголовок XML-документа
                 xmlWriter.WriteStartDocument();
 
-                xmlWriter.WriteStartElement("table");
-                // Пишем шапку таблицы
-                xmlWriter.WriteStartElement("header");
-                for (int i = 0; i < reader.FieldCount; i++)
-                    xmlWriter.WriteElementString(reader.GetName(i).ToString(), "");
-                xmlWriter.WriteEndElement();
-
                 // Пишем тело таблицы
-                xmlWriter.WriteStartElement("data");
+                xmlWriter.WriteStartElement("tablespaces");
 
                 while (reader.Read())
                 {
@@ -113,13 +118,6 @@ namespace Warden
                         {
                             str = reader.GetValue(i).ToString();
                             xmlWriter.WriteStartElement(str);
-                            if (str != stop_tablespace)
-                            {
-                                sum_max_bytes = 0;
-                                sum_bytes = 0;
-
-                            }
-                            stop_tablespace = str;
                         }
                         else
                         {
@@ -127,16 +125,22 @@ namespace Warden
                             inGB = (ulong)Math.Floor(inGB);
                             if (count_cell == 0)
                             {
-                                sum_bytes += inGB;
-                                xmlWriter.WriteElementString("Value", sum_bytes.ToString());
-                                
+                                xmlWriter.WriteElementString("Value", inGB.ToString());
+                                count_cell++;
+                            }
+                            else if (count_cell == 1)
+                            {
+                                xmlWriter.WriteElementString("MaxValue", inGB.ToString());
+                                count_cell++;
+                            }
+                            else if (count_cell == 2)
+                            {
+                                xmlWriter.WriteElementString("Remainder", inGB.ToString());
                                 count_cell++;
                             }
                             else
                             {
-                                sum_max_bytes += inGB;
-                                xmlWriter.WriteElementString("MaxValue", sum_max_bytes.ToString());
-                                
+                                xmlWriter.WriteElementString("Percent", reader.GetValue(i).ToString());
                                 count_cell = 0;
                             }
                         }

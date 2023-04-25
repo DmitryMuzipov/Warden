@@ -20,17 +20,11 @@ namespace Warden
             // Создание обьектов
             WorkXML inXml = new WorkXML(filename);
 
-            
-
-
-
             // Десиериализация JSON
             string message = File.ReadAllText("person.json");
             string config = File.ReadAllText("config.json");
             Massage[] Mes = JsonConvert.DeserializeObject<Massage[]>(message);
             Config[] Conf = JsonConvert.DeserializeObject<Config[]>(config);
-
-
 
             // Формирование письма
             string body = inXml.HeadHTML();
@@ -40,7 +34,6 @@ namespace Warden
                 //сcon.ConnectViev();
                 workDB inBD = new workDB(con.ConnectionString);
                 inBD.SQLToXml(filename);
-                inXml.Handler_percent();
                 body += "<p>" + con.Server + "</p>";
                 body += inXml.XmlToHtml();
             }
