@@ -10,15 +10,19 @@ namespace Warden
 {
     class SendMail
     {
+        private string smtp;
         private string from;
         private string subject;
         private string body;
+        private string pass;
 
-        public SendMail(string from, string subject, string body)
+        public SendMail(string smtp, string from, string subject, string body, string pass)
         {
+            this.smtp = smtp;
             this.from = from;
             this.subject = subject;
             this.body = body;
+            this.pass = pass;
         }
         public void Send(string to)
         {
@@ -33,9 +37,6 @@ namespace Warden
 
         private MailMessage GetMailMessage(string to)
         {
-            //WorkXML inXml = new WorkXML("Выгрузка.xml");
-            //string body = inXml.XmlToHtml();
-
             // создаём объект сообщения
             MailMessage mailMessage = new MailMessage();
             // указываем, от кого отсылается сообщение
@@ -58,15 +59,11 @@ namespace Warden
         private SmtpClient GetSmtpClient()
         {
             // создаём объект SmtpClient
-            SmtpClient smtpClient = new SmtpClient();
-            // указываем адрес используемого SMTP сервера
-            smtpClient.Host = "mnu-msg-prom18.tomskneft.ru";
+            SmtpClient smtpClient = new SmtpClient(smtp, 587);
             // указываем, что необходимо использовать SSL
             smtpClient.EnableSsl = true;
-            // задаём используемый порт
-            smtpClient.Port = 587;
             // доступ к SMTP серверу
-            smtpClient.Credentials = new NetworkCredential(from, "Ntnhbfylj[4");
+            smtpClient.Credentials = new NetworkCredential(from, pass);
 
             return smtpClient;
         }

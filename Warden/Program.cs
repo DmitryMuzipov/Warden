@@ -8,6 +8,7 @@ using System.Xml;
 using Devart.Data.Oracle;
 using Newtonsoft.Json;
 using System.IO;
+using System.Threading;
 
 namespace Warden
 {
@@ -43,8 +44,9 @@ namespace Warden
             // Отправка письма по списку
             foreach (var per in Mes)
             {
-                SendMail send = new SendMail(per.From, per.Subject, body);
+                SendMail send = new SendMail(per.SmtpClient, per.From, per.Subject, body, per.Pass);
                 send.Send(per.To);
+                Thread.Sleep(5000);
             }
 
             //Console.Read();
