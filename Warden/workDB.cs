@@ -123,26 +123,26 @@ namespace Warden
                         {
                             inGB = Convert.ToUInt64(reader.GetValue(i)) / KonstGB;
                             inGB = (ulong)Math.Floor(inGB);
-                            if (count_cell == 0)
+                            switch (count_cell)
                             {
-                                xmlWriter.WriteElementString("Value", inGB.ToString() + " GB");
-                                count_cell++;
+                                case 0:
+                                    xmlWriter.WriteElementString("Value", inGB.ToString());
+                                    count_cell++;
+                                    break;
+                                case 1:
+                                    xmlWriter.WriteElementString("MaxValue", inGB.ToString());
+                                    count_cell++;
+                                    break;
+                                case 2:
+                                    xmlWriter.WriteElementString("Remainder", inGB.ToString());
+                                    count_cell++;
+                                    break;
+                                default:
+                                    xmlWriter.WriteElementString("Percent", reader.GetValue(i).ToString());
+                                    count_cell = 0;
+                                    break;
                             }
-                            else if (count_cell == 1)
-                            {
-                                xmlWriter.WriteElementString("MaxValue", inGB.ToString() + " GB");
-                                count_cell++;
-                            }
-                            else if (count_cell == 2)
-                            {
-                                xmlWriter.WriteElementString("Remainder", inGB.ToString() + " MB");
-                                count_cell++;
-                            }
-                            else
-                            {
-                                xmlWriter.WriteElementString("Percent", reader.GetValue(i).ToString() + "%");
-                                count_cell = 0;
-                            }
+                           
                         }
                     }
 
@@ -155,10 +155,10 @@ namespace Warden
                 // Закрываем объект для записи XML-документа
                 xmlWriter.Flush();
                 xmlWriter.Close();
-
+                //Console.Read();
                 //Console.WriteLine("Выгрузка завершена");
             }
-
+            
             Console.WriteLine("Запрос к базе данных выполнен. Результат сохранен в файл " + fileName);
             closeDB();
             //Console.ReadLine();

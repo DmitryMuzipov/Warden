@@ -30,7 +30,7 @@ namespace Warden
             string body = inHTML.HeadHTML();
             foreach (var con in Conf)
             {
-                ConnectCheck сcon = new ConnectCheck("10.225.184.24");
+                ConnectCheck сcon = new ConnectCheck(con.Ip);
                 сcon.ConnectViev();
                 workDB inBD = new workDB(con.ConnectionString);
                 inBD.SQLToXml(filename);
@@ -47,7 +47,7 @@ namespace Warden
                 send.Send(per.To);
             }
 
-            Console.Read();
+            //Console.Read();
         }
     }
 }

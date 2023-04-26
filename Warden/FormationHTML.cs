@@ -27,7 +27,9 @@ namespace Warden
                                 "td{border: 1px solid black;" +
                                    "padding: 5px; margin: 5px;}" +
                                 "th{margin-left: 15px;}" +
-                                "td.reed{background: #e05858;}" +
+                                "td.red{background: #e05858;}" +
+                                "td.green{background: #237d2f;}" +
+                                "td.orange{background: #c4c718;}" +
                                 "tr {border: 2px solid black;}" +
                                 "p{font-size: 15px;}" +
                               "</style></head ><body>";
@@ -46,7 +48,9 @@ namespace Warden
             // Создаем обьект XML и загружаем в него файл
             XmlDocument doc = new XmlDocument();
             doc.Load("выгрузка.xml");
-            string cl = "reed";
+            string red = "red";
+            string green = "green";
+            string orange = "orange";
 
             // Пишем строку с шапкой и заголовки колонок
             string html = "<table>";
@@ -64,10 +68,14 @@ namespace Warden
 
                 html += "<tr>";
                 html += "<td>" + tablespace + "</td>";
-                html += "<td>" + maxValue + "</td>";
-                html += "<td>" + value + "</td>";
-                html += "<td>" + remainder + "</td>";
-                html += "<td class=" + cl + ">" + percent + "</td>";
+                html += "<td>" + maxValue + " GB</td>";
+                html += "<td>" + value + " GB</td>";
+                html += "<td>" + remainder + " MB</td>";
+                // Цветовая интерференция процентов
+                if (Convert.ToDouble(percent) < 80) html += "<td class=" + green + ">" + percent + "%</td>";
+                else if (Convert.ToDouble(percent) >= 80 && Convert.ToDouble(percent) < 90) html += "<td class=" + orange + ">" + percent + "%</td>";
+                else html += "<td class=" + red + ">" + percent + "%</td>";
+                //html += "<td class=" + cl + ">" + percent + "</td>";
                 html += "</tr>";
             }
 
