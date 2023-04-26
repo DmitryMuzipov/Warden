@@ -15,7 +15,6 @@ namespace Warden
     {
         OracleConnection connection = new OracleConnection();
         private string adress;
-        //private string query = "SELECT tablespace_name, bytes, maxbytes FROM dba_data_files ORDER BY tablespace_name";
         private string query = "SELECT +" +
                                     "tablespace_name as tablespaces, " +
                                     "SUM(bytes) as bytes, " +
@@ -43,6 +42,7 @@ namespace Warden
         {
             connection.OpenAsync();
 
+            ReadLOG.ReadFile("подключение к базе данных: " + connection.DataSource + "\n" + connection.ServerVersion);
             Console.WriteLine("подключение к базе данных: " + connection.DataSource + "\n" + connection.ServerVersion + "\n");
         }
 
@@ -51,6 +51,7 @@ namespace Warden
         {
             connection.Close();
 
+            ReadLOG.ReadFile("подключение завершено");
             Console.WriteLine("подключение завершено\n");
         }
 
@@ -78,6 +79,7 @@ namespace Warden
                 }
             }
 
+            ReadLOG.ReadFile("Запрос к базе данных выполнен");
             Console.WriteLine("Запрос к базе данных выполнен\n");
             closeDB();
             Console.ReadLine();
@@ -156,9 +158,11 @@ namespace Warden
                 xmlWriter.Flush();
                 xmlWriter.Close();
                 //Console.Read();
+                ReadLOG.ReadFile("Выгрузка данных завершена");
                 //Console.WriteLine("Выгрузка завершена");
             }
-            
+
+            ReadLOG.ReadFile("Запрос к базе данных выполнен. Результат сохранен в файл " + fileName);
             Console.WriteLine("Запрос к базе данных выполнен. Результат сохранен в файл " + fileName);
             closeDB();
             //Console.ReadLine();

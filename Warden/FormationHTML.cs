@@ -34,6 +34,7 @@ namespace Warden
                                 "p{font-size: 15px;}" +
                               "</style></head ><body>";
 
+            ReadLOG.ReadFile("HTML Заголовок сформирован");
             return html;
         }
 
@@ -82,6 +83,7 @@ namespace Warden
             html += "</table>";
 
             //Console.WriteLine(html);
+            ReadLOG.ReadFile("HTML сформирован" + "\n");
             return html;
         }
     }

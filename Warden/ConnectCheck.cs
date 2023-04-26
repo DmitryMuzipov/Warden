@@ -38,7 +38,12 @@ namespace Warden
         public void ConnectViev()
         {
             Dictionary<string, string> connect = CheckConnect(ip);
-            
+
+            ReadLOG.ReadFile("время ответа: " + connect["time"]);
+            ReadLOG.ReadFile("Статус: " + connect["status"]);
+            ReadLOG.ReadFile("ip адресс: " + connect["address"]);
+            ReadLOG.ReadFile("Подключение к базе готово");
+
             Console.WriteLine("время ответа: " + connect["time"]);
             Console.WriteLine("Статус: " + connect["status"]);
             Console.WriteLine("ip адресс: " + connect["address"]);

@@ -46,7 +46,8 @@ namespace Warden
             {
                 SendMail send = new SendMail(per.SmtpClient, per.From, per.Subject, body, per.Pass);
                 send.Send(per.To);
-                Thread.Sleep(5000);
+                ReadLOG.ReadFile("Письмо отправлено на адресс" + per.To);
+                Thread.Sleep(1000);
             }
 
             //Console.Read();
