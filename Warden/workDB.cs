@@ -15,19 +15,21 @@ namespace Warden
     {
         OracleConnection connection = new OracleConnection();
         private string adress;
-        private string query = "SELECT +" +
-                                    "tablespace_name as tablespaces, " +
-                                    "SUM(bytes) as bytes, " +
-                                    "SUM(maxbytes) as maxbytes, " +
-                                    "SUM(maxbytes - bytes) as remainder, " +
-                                    "ROUND((SUM(bytes) / SUM(maxbytes)) * 100, 2) AS Percent " +
-                                "FROM dba_data_files WHERE tablespace_name IN " +
-                                    "(SELECT tablespace_name " +
-                                        "FROM dba_data_files " +
-                                        "GROUP BY tablespace_name " +
-                                    "HAVING(SUM(bytes) / SUM(maxbytes)) * 100 > 70) " +
-                                "GROUP BY tablespace_name " +
-                                "ORDER BY tablespace_name ";
+        private string query = "SELECT a.tablespace_name as tablespaces, (a.\"Total, MB\" - b.\"Free, MB\") as bytes,  a.\"Total, MB\" as maxbytes,  b.\"Free, MB\" as remainder, ROUND(((a.\"Total, MB\" - b.\"Free, MB\") / a.\"Total, MB\") * 100, 2) AS Percent FROM (SELECT tablespace_name, ROUND(SUM(bytes)/1024/1024) AS \"Total, MB\"  FROM dba_data_files GROUP BY tablespace_name ) a LEFT JOIN (SELECT tablespace_name, ROUND(SUM(bytes)/1024/1024) AS \"Free, MB\"  FROM dba_free_space GROUP BY tablespace_name ) b ON a.tablespace_name = b.tablespace_name WHERE ROUND(((a.\"Total, MB\" - b.\"Free, MB\") / a.\"Total, MB\") * 100, 2) > 70 ORDER BY tablespaces"; 
+
+        //private string query = "SELECT +" +
+        //                            "tablespace_name as tablespaces, " +
+        //                            "SUM(bytes) as bytes, " +
+        //                            "SUM(maxbytes) as maxbytes, " +
+        //                            "SUM(maxbytes - bytes) as remainder, " +
+        //                            "ROUND((SUM(bytes) / SUM(maxbytes)) * 100, 2) AS Percent " +
+        //                        "FROM dba_data_files WHERE tablespace_name IN " +
+        //                            "(SELECT tablespace_name " +
+        //                                "FROM dba_data_files " +
+        //                                "GROUP BY tablespace_name " +
+        //                            "HAVING(SUM(bytes) / SUM(maxbytes)) * 100 > 70) " +
+        //                        "GROUP BY tablespace_name " +
+        //                        "ORDER BY tablespace_name ";
 
 
         // конструктор
@@ -58,31 +60,39 @@ namespace Warden
         // исполнение запроса к базе данных
         public void SQLquery(string query)
         {
-            connectDB();
-            OracleCommand command = connection.CreateCommand();
-            command.CommandText = query;
-
-            using (OracleDataReader reader = command.ExecuteReader())
+            try
             {
-                for (int i = 0; i < reader.FieldCount; i++)
-                    Console.Write(reader.GetName(i).ToString() + "\t");
-                Console.Write(Environment.NewLine);
-
-                while (reader.Read())
+                connectDB();
+                OracleCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                using (OracleDataReader reader = command.ExecuteReader())
                 {
                     for (int i = 0; i < reader.FieldCount; i++)
+                        Console.Write(reader.GetName(i).ToString() + "\t");
+                    Console.Write(Environment.NewLine);
+
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < reader.FieldCount; i++)
 
                             Console.Write(reader.GetValue(i).ToString() + "\t");
 
-                        
-                    Console.Write(Environment.NewLine);
+
+                        Console.Write(Environment.NewLine);
+                    }
                 }
             }
-
-            ReadLOG.ReadFile("Запрос к базе данных выполнен");
-            Console.WriteLine("Запрос к базе данных выполнен\n");
-            closeDB();
-            Console.ReadLine();
+            catch
+            {
+                Console.WriteLine("Запрос к базе данных НЕ выполнен\n");
+            }
+            finally
+            {
+                ReadLOG.ReadFile("Запрос к базе данных выполнен");
+                Console.WriteLine("Запрос к базе данных выполнен\n");
+                closeDB();
+                Console.ReadLine();
+            }
         }
 
         // запись таблици в XML
@@ -96,7 +106,6 @@ namespace Warden
 
             using (OracleDataReader reader = command.ExecuteReader())
             {
-                var KonstGB = 1048575.5f;
                 var inGB = 0f;
                 var str = "";
                 var sum_max_bytes = 0f;
@@ -123,8 +132,7 @@ namespace Warden
                         }
                         else
                         {
-                            inGB = Convert.ToUInt64(reader.GetValue(i)) / KonstGB;
-                            inGB = (ulong)Math.Floor(inGB);
+                            inGB = Convert.IsDBNull(reader.GetValue(i)) ? 0 : Convert.ToInt32(reader.GetValue(i));
                             switch (count_cell)
                             {
                                 case 0:
