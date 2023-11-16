@@ -11,26 +11,22 @@ using System.Xml;
 namespace Warden
 {
     // Класс описывает подключение к базе данных.
-    class workDB
+    class workDB: IConnect
     {
         OracleConnection connection = new OracleConnection();
         private string adress;
-        private string query = "SELECT a.tablespace_name as tablespaces, (a.\"Total, MB\" - b.\"Free, MB\") as bytes,  a.\"Total, MB\" as maxbytes,  b.\"Free, MB\" as remainder, ROUND(((a.\"Total, MB\" - b.\"Free, MB\") / a.\"Total, MB\") * 100, 2) AS Percent FROM (SELECT tablespace_name, ROUND(SUM(bytes)/1024/1024) AS \"Total, MB\"  FROM dba_data_files GROUP BY tablespace_name ) a LEFT JOIN (SELECT tablespace_name, ROUND(SUM(bytes)/1024/1024) AS \"Free, MB\"  FROM dba_free_space GROUP BY tablespace_name ) b ON a.tablespace_name = b.tablespace_name WHERE ROUND(((a.\"Total, MB\" - b.\"Free, MB\") / a.\"Total, MB\") * 100, 2) > 70 ORDER BY tablespaces"; 
-
-        //private string query = "SELECT +" +
-        //                            "tablespace_name as tablespaces, " +
-        //                            "SUM(bytes) as bytes, " +
-        //                            "SUM(maxbytes) as maxbytes, " +
-        //                            "SUM(maxbytes - bytes) as remainder, " +
-        //                            "ROUND((SUM(bytes) / SUM(maxbytes)) * 100, 2) AS Percent " +
-        //                        "FROM dba_data_files WHERE tablespace_name IN " +
-        //                            "(SELECT tablespace_name " +
-        //                                "FROM dba_data_files " +
-        //                                "GROUP BY tablespace_name " +
-        //                            "HAVING(SUM(bytes) / SUM(maxbytes)) * 100 > 70) " +
-        //                        "GROUP BY tablespace_name " +
-        //                        "ORDER BY tablespace_name ";
-
+        private string query = "SELECT " +
+            "a.tablespace_name as tablespaces, " +
+                "(a.\"Total, MB\" - b.\"Free, MB\") as bytes, " +
+                "a.\"Total, MB\" as maxbytes,  " +
+                "b.\"Free, MB\" as remainder, ROUND(((a.\"Total, MB\" - b.\"Free, MB\") / a.\"Total, MB\") * 100, 2) AS Percent " +
+            "FROM " +
+                "(SELECT " +
+                    "tablespace_name, ROUND(SUM(bytes)/1024/1024) AS \"Total, MB\"  FROM dba_data_files GROUP BY tablespace_name ) a LEFT JOIN " +
+                "(SELECT tablespace_name, ROUND(SUM(bytes)/1024/1024) AS \"Free, MB\"  FROM dba_free_space GROUP BY tablespace_name ) b ON a.tablespace_name = b.tablespace_name " +
+            "WHERE " +
+                "ROUND(((a.\"Total, MB\" - b.\"Free, MB\") / a.\"Total, MB\") * 100, 2) > 70 " +
+            "ORDER BY tablespaces";
 
         // конструктор
         public workDB(string adress)
@@ -49,7 +45,7 @@ namespace Warden
         }
 
         // отключение от базы данных
-        private void closeDB()
+        public void closeDB()
         {
             connection.Close();
 
